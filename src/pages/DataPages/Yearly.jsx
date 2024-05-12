@@ -251,29 +251,33 @@ const Yearly = () => {
           </Collapse>
         </>
       )}
-      <Divider type="horizontal" orientation="center" plain />
-      <div
-        style={{
-          border: "1px solid #424242",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          padding: 10,
-          borderRadius: "8px",
-          backgroundColor: "rgba(255, 255, 255, 0.04)",
-          color: "#cb7b6d",
-        }}
-      >
-        <h2
-          className="poppins-light"
-          style={{
-            color: "lightseagreen",
-          }}
-        >
-          Total Expenses
-        </h2>
-        <h2 className="poppins-light">$&nbsp;{yearlyTotal}</h2>
-      </div>
+      {filterYearWise?.length > 0 && (
+        <>
+          <Divider type="horizontal" orientation="center" plain />
+          <div
+            style={{
+              border: "1px solid #424242",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              padding: 10,
+              borderRadius: "8px",
+              backgroundColor: "rgba(255, 255, 255, 0.04)",
+              color: "#cb7b6d",
+            }}
+          >
+            <h2
+              className="poppins-light"
+              style={{
+                color: "lightseagreen",
+              }}
+            >
+              Total Expenses
+            </h2>
+            <h2 className="poppins-light">$&nbsp;{yearlyTotal}</h2>
+          </div>
+        </>
+      )}
     </ContentWrapper>
   );
 };
