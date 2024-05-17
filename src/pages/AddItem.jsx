@@ -178,6 +178,7 @@ const AddItem = () => {
             placeholder="Title"
             style={{
               width: "350px",
+              maxWidth:'300px'
             }}
             size="large"
           />
@@ -197,6 +198,7 @@ const AddItem = () => {
             placeholder="Amount"
             style={{
               width: "350px",
+              maxWidth:'300px'
             }}
             size="large"
           />
@@ -206,6 +208,7 @@ const AddItem = () => {
             size="large"
             style={{
               width: "350px",
+              maxWidth:'300px'
             }}
             placeholder="Select Category"
             dropdownRender={(menu) => (
@@ -261,6 +264,7 @@ const AddItem = () => {
             picker="date"
             style={{
               width: "350px",
+              maxWidth:'300px'
             }}
             size="large"
           />

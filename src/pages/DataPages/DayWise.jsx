@@ -9,9 +9,11 @@ import {
   setRefetchStatus,
 } from "../../store/features/global/globalSlice";
 import { PlusCircleOutlined, RightOutlined } from "@ant-design/icons";
-import { Divider, Empty } from "antd";
+import { Divider, Empty, Skeleton } from "antd";
+import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 
 const DayWise = () => {
+  const screens = useBreakpoint();
   const date = new Date();
   const userData = useSelector(selectUserItemsData);
   const userDataLoading = useSelector(selectItemsLoading);
@@ -24,7 +26,9 @@ const DayWise = () => {
   return (
     <ContentWrapper bread={false}>
       {userDataLoading ? (
-        "loading"
+        [1, 2, 3, 4, 5].map((el) => {
+          return <Skeleton key={el} />;
+        })
       ) : filterDayWise?.length === 0 ? (
         <Empty
           style={{

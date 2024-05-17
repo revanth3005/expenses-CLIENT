@@ -9,7 +9,7 @@ import {
   setRefetchStatus,
 } from "../../store/features/global/globalSlice";
 import { PlusCircleOutlined, RightOutlined } from "@ant-design/icons";
-import { Empty, Collapse, Divider } from "antd";
+import { Empty, Collapse, Divider, Skeleton } from "antd";
 
 const Yearly = () => {
   const { Panel } = Collapse;
@@ -190,7 +190,9 @@ const Yearly = () => {
   return (
     <ContentWrapper bread={false}>
       {userDataLoading ? (
-        "loading"
+         [1, 2, 3, 4, 5].map((el) => {
+          return <Skeleton key={el} />;
+        })
       ) : filterYearWise?.length === 0 ? (
         <Empty
           style={{

@@ -6,7 +6,7 @@ import {
   selectUserItemsData,
 } from "../../store/features/global/globalSlice";
 import { PlusCircleOutlined, RightOutlined } from "@ant-design/icons";
-import { Collapse, Divider, Empty, Modal } from "antd";
+import { Collapse, Divider, Empty, Modal, Skeleton } from "antd";
 import UpdateModal from "../../components/UpdateModal";
 
 const { Panel } = Collapse;
@@ -223,7 +223,9 @@ const Monthly = () => {
   return (
     <ContentWrapper bread={false}>
       {userDataLoading ? (
-        "loading"
+         [1, 2, 3, 4, 5].map((el) => {
+          return <Skeleton key={el} />;
+        })
       ) : filteredMonthly?.length === 0 ? (
         <Empty
           style={{

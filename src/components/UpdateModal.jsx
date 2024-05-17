@@ -47,6 +47,7 @@ const UpdateModal = (props) => {
             placeholder="Title"
             style={{
               width: "350px",
+              maxWidth:'300px'
             }}
             size="large"
           />
@@ -56,6 +57,7 @@ const UpdateModal = (props) => {
             placeholder="Amount"
             style={{
               width: "350px",
+              maxWidth:'300px'
             }}
             size="large"
           />
@@ -66,6 +68,7 @@ const UpdateModal = (props) => {
             placeholder="Category"
             style={{
               width: "350px",
+              maxWidth:'300px'
             }}
             size="large"
           />
