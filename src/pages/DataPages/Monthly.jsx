@@ -5,29 +5,37 @@ import {
   selectItemsLoading,
   selectUserItemsData,
 } from "../../store/features/global/globalSlice";
-import { PlusCircleOutlined, RightOutlined } from "@ant-design/icons";
-import { Collapse, Divider, Empty, Modal, Skeleton } from "antd";
+import {
+  LeftCircleOutlined,
+  PlusCircleOutlined,
+  RightCircleOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
+import { Button, Collapse, Divider, Empty, Modal, Skeleton } from "antd";
 import UpdateModal from "../../components/UpdateModal";
 
 const { Panel } = Collapse;
 const Monthly = () => {
+  const [test, setTest] = useState(new Date().getMonth());
+  const [changeMonth, setChangeMonth] = useState(new Date().getMonth());
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   const getDate = () => {
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
     const date = new Date();
-    return `${months[date.getMonth()]} - ${date.getFullYear()}`;
+    return `${months[changeMonth]} - ${date.getFullYear()}`;
+    // return `${months[date.getMonth()]} - ${date.getFullYear()}`;
   };
   // update modal state
   // um ==> update modal
@@ -35,10 +43,19 @@ const Monthly = () => {
   const userData = useSelector(selectUserItemsData);
   const userDataLoading = useSelector(selectItemsLoading);
   const filteredMonthly = useMemo(() => {
+    // if (test) {
+    //   return userData?.filter(
+    //     (item) => new Date(item.date).getMonth() === test
+    //   );
+    // } else {
+    //   return userData?.filter(
+    //     (item) => new Date(item.date).getMonth() === new Date().getMonth()
+    //   );
+    // }
     return userData?.filter(
-      (item) => new Date(item.date).getMonth() === new Date().getMonth()
+      (item) => new Date(item.date).getMonth() === changeMonth
     );
-  }, [userData]);
+  }, [userData, changeMonth]);
 
   //sorting by date
   const filteredMonthlySort = useMemo(() => {
@@ -216,14 +233,48 @@ const Monthly = () => {
   useEffect(() => {
     const getCategoriesData = localStorage.getItem("categoryTypes");
     const categoryTypes = JSON.parse(getCategoriesData)?.data;
-    // console.log(categoryTypes);
-    // console.log("sai");
   }, []);
+
+  const incMonthFunc = () => {
+    setChangeMonth((month) => month + 1);
+  };
+  const decMonthFunc = () => {
+    setChangeMonth((month) => month - 1);
+  };
 
   return (
     <ContentWrapper bread={false}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          alignContent: "center",
+          padding: "10px",
+        }}
+      >
+        <LeftCircleOutlined
+          style={{
+            fontSize: "20px",
+            cursor: changeMonth === 0 ? "auto" : "pointer",
+            color: changeMonth === 0 ? "grey" : "white",
+          }}
+          disabled={changeMonth == 1}
+          onClick={changeMonth === 0 ? "" : decMonthFunc}
+        />
+        <h2 className="poppins-regular">{getDate()}</h2>
+        <RightCircleOutlined
+          style={{
+            fontSize: "20px",
+            cursor: changeMonth === 11 ? "auto" : "pointer",
+            color: changeMonth === 11 ? "grey" : "white",
+          }}
+          onClick={changeMonth === 11 ? "" : incMonthFunc}
+          disabled={changeMonth == 12}
+        />
+      </div>
       {userDataLoading ? (
-         [1, 2, 3, 4, 5].map((el) => {
+        [1, 2, 3, 4, 5].map((el) => {
           return <Skeleton key={el} />;
         })
       ) : filteredMonthly?.length === 0 ? (
@@ -247,43 +298,32 @@ const Monthly = () => {
           }
         ></Empty>
       ) : (
-        <>
-          <h2
-            className="poppins-regular"
-            style={{
-              textAlign: "center",
-              paddingBottom: "20px",
-            }}
-          >
-            {getDate()}
-          </h2>
-          <Collapse accordion>
-            {filteredUniqueDates.map((item) => (
-              <Panel
-                header={
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <h3 className="poppins-regular">
-                      {new Date(item?.date).toDateString()}
-                    </h3>
-                    <h3 className="poppins-regular">
-                      $&nbsp;{getTotalForDate(item?.date)}
-                    </h3>
-                  </div>
-                }
-                key={item._id}
-              >
-                <Collapse accordion>{getCategoriesInDate(item)}</Collapse>
-                <div>{displayItems(item)}</div>
-              </Panel>
-            ))}
-          </Collapse>
-        </>
+        <Collapse accordion>
+          {filteredUniqueDates.map((item) => (
+            <Panel
+              header={
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <h3 className="poppins-regular">
+                    {new Date(item?.date).toDateString()}
+                  </h3>
+                  <h3 className="poppins-regular">
+                    $&nbsp;{getTotalForDate(item?.date)}
+                  </h3>
+                </div>
+              }
+              key={item._id}
+            >
+              <Collapse accordion>{getCategoriesInDate(item)}</Collapse>
+              <div>{displayItems(item)}</div>
+            </Panel>
+          ))}
+        </Collapse>
       )}
 
       {filteredMonthly?.length > 0 && (
@@ -316,6 +356,13 @@ const Monthly = () => {
 
       {/* Modal for updating items */}
       <UpdateModal um_open={um_open} setUM_open={setUM_open} />
+
+      {/* <Button disabled={test == 12} onClick={testCount}>
+        Inc
+      </Button>
+      <Button disabled={test == 1} onClick={testCountN}>
+        dec
+      </Button> */}
     </ContentWrapper>
   );
 };

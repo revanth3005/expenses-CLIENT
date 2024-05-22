@@ -82,7 +82,6 @@ const ResponsiveDrawer = () => {
       navigate("/");
     } else if (e.key === "profile") {
       navigate("/Home");
-    } else {
     }
   };
   const content = (
@@ -247,7 +246,7 @@ const ResponsiveDrawer = () => {
         >
           {loggedIn ? (
             <>
-              <Button type="default" onClick={()=>navigate('/')}>
+              <Button type="default" onClick={() => navigate("/")}>
                 Profile
               </Button>
               <Button
