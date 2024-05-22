@@ -2,15 +2,14 @@ import { Form, Input, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 
 const UpdateModal = (props) => {
-  const { setUM_open, um_open } = props;
+  const { closeUpdateModal, um_open, itemData } = props;
+  console.log("itemData", itemData);
   const [form] = Form.useForm();
   useEffect(() => {
-    const update_items = localStorage.getItem("update_item");
-    const items = JSON.parse(update_items);
     form.setFieldsValue({
-      title: items?.title,
-      amount: items?.amount,
-      category: items?.category,
+      title: itemData?.title,
+      amount: itemData?.amount,
+      category: itemData?.category,
     });
   }, [form]);
   const handleOnOk = async () => {
@@ -29,7 +28,7 @@ const UpdateModal = (props) => {
       open={um_open}
       onOk={handleOnOk}
       // confirmLoading={true}
-      onCancel={() => setUM_open(false)}
+      onCancel={() => closeUpdateModal(false)}
       closable={true}
       maskClosable={false}
     >
@@ -47,7 +46,7 @@ const UpdateModal = (props) => {
             placeholder="Title"
             style={{
               width: "350px",
-              maxWidth:'300px'
+              maxWidth: "300px",
             }}
             size="large"
           />
@@ -57,7 +56,7 @@ const UpdateModal = (props) => {
             placeholder="Amount"
             style={{
               width: "350px",
-              maxWidth:'300px'
+              maxWidth: "300px",
             }}
             size="large"
           />
@@ -68,7 +67,7 @@ const UpdateModal = (props) => {
             placeholder="Category"
             style={{
               width: "350px",
-              maxWidth:'300px'
+              maxWidth: "300px",
             }}
             size="large"
           />

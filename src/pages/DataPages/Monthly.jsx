@@ -16,7 +16,6 @@ import UpdateModal from "../../components/UpdateModal";
 
 const { Panel } = Collapse;
 const Monthly = () => {
-  const [test, setTest] = useState(new Date().getMonth());
   const [changeMonth, setChangeMonth] = useState(new Date().getMonth());
   const months = [
     "January",
@@ -40,6 +39,7 @@ const Monthly = () => {
   // update modal state
   // um ==> update modal
   const [um_open, setUM_open] = useState(false);
+  const [itemData, setItemData] = useState({});
   const userData = useSelector(selectUserItemsData);
   const userDataLoading = useSelector(selectItemsLoading);
   const filteredMonthly = useMemo(() => {
@@ -227,7 +227,7 @@ const Monthly = () => {
 
   const updateItem = async (item) => {
     setUM_open(true);
-    localStorage.setItem("update_item", JSON.stringify(item));
+    setItemData(item)
   };
 
   useEffect(() => {
@@ -241,6 +241,10 @@ const Monthly = () => {
   const decMonthFunc = () => {
     setChangeMonth((month) => month - 1);
   };
+
+  const closeUpdateModal=(state)=>{
+    setUM_open(state)
+  }
 
   return (
     <ContentWrapper bread={false}>
@@ -355,14 +359,8 @@ const Monthly = () => {
       )}
 
       {/* Modal for updating items */}
-      <UpdateModal um_open={um_open} setUM_open={setUM_open} />
+      <UpdateModal itemData={itemData} um_open={um_open} closeUpdateModal={closeUpdateModal} />
 
-      {/* <Button disabled={test == 12} onClick={testCount}>
-        Inc
-      </Button>
-      <Button disabled={test == 1} onClick={testCountN}>
-        dec
-      </Button> */}
     </ContentWrapper>
   );
 };
