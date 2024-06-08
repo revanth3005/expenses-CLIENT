@@ -43,15 +43,7 @@ const Monthly = () => {
   const userData = useSelector(selectUserItemsData);
   const userDataLoading = useSelector(selectItemsLoading);
   const filteredMonthly = useMemo(() => {
-    // if (test) {
-    //   return userData?.filter(
-    //     (item) => new Date(item.date).getMonth() === test
-    //   );
-    // } else {
-    //   return userData?.filter(
-    //     (item) => new Date(item.date).getMonth() === new Date().getMonth()
-    //   );
-    // }
+
     return userData?.filter(
       (item) => new Date(item.date).getMonth() === changeMonth
     );
@@ -248,6 +240,22 @@ const Monthly = () => {
 
   return (
     <ContentWrapper bread={false}>
+        <div style={{
+        // border:'1px solid red',
+        display:'flex',
+        justifyContent:'center'
+      }}>
+
+      <div
+        style={{
+          // border: "1px solid white",
+          width:'800px',
+          display:'flex',
+          flexDirection:'column',
+          alignContent:'center',
+          justifyContent:'center'
+        }}
+      >
       <div
         style={{
           display: "flex",
@@ -360,6 +368,13 @@ const Monthly = () => {
 
       {/* Modal for updating items */}
       <UpdateModal itemData={itemData} um_open={um_open} closeUpdateModal={closeUpdateModal} />
+      </div>
+      
+        </div>
+
+
+
+
 
     </ContentWrapper>
   );

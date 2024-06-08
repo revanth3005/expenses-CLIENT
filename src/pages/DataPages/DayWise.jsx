@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ContentWrapper from "../../components/Layout/ContentWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,6 +11,7 @@ import {
 import { PlusCircleOutlined, RightOutlined } from "@ant-design/icons";
 import { Divider, Empty, Skeleton } from "antd";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
+import UpdateModal from "../../components/UpdateModal";
 
 const DayWise = () => {
   const screens = useBreakpoint();
@@ -23,142 +24,178 @@ const DayWise = () => {
   );
   console.log(filterDayWise);
   const totalAmount = filterDayWise?.reduce((acc, cur) => acc + cur?.amount, 0);
+  // update data modal state
+  const [itemData, setItemData] = useState({});
+  const [um_open, setUM_open] = useState(false);
+  const closeUpdateModal = (state) => {
+    setUM_open(state);
+  };
+  const updateItem = async (item) => {
+    setUM_open(true);
+    setItemData(item);
+  };
+
   return (
     <ContentWrapper bread={false}>
-      {userDataLoading ? (
-        [1, 2, 3, 4, 5].map((el) => {
-          return <Skeleton key={el} />;
-        })
-      ) : filterDayWise?.length === 0 ? (
-        <Empty
-          style={{
-            paddingTop: "150px",
-          }}
-          image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-          imageStyle={{ height: 60 }}
-          description={
-            <h4 className={"poppins-medium"}>
-              No data Click on{" "}
-              <PlusCircleOutlined
-                style={{
-                  fontSize: "16px",
-                  color: "skyblue",
-                }}
-              />{" "}
-              to add Expenses
-            </h4>
-          }
-        >
-          {/* <Button type="primary">Create Now</Button> */}
-        </Empty>
-      ) : (
-        <>
-          <h2
-            className="poppins-regular"
-            style={{
-              textAlign: "center",
-              paddingBottom: "20px",
-            }}
-          >
-            {date.toDateString()}
-          </h2>
+      <div style={{
+        // border:'1px solid red',
+        display:'flex',
+        justifyContent:'center'
+      }}>
 
-          <div
+      <div
+        style={{
+          // border: "1px solid white",
+          width:'800px',
+          display:'flex',
+          flexDirection:'column',
+          alignContent:'center',
+          justifyContent:'center'
+        }}
+      >
+        {userDataLoading ? (
+          [1, 2, 3, 4, 5].map((el) => {
+            return <Skeleton key={el} />;
+          })
+        ) : filterDayWise?.length === 0 ? (
+          <Empty
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "10px",
+              paddingTop: "150px",
             }}
-          >
-            {filterDayWise?.map((item) => {
-              return (
-                <div
-                  key={item?._id}
+            image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+            imageStyle={{ height: 60 }}
+            description={
+              <h4 className={"poppins-medium"}>
+                No data Click on{" "}
+                <PlusCircleOutlined
                   style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    borderBottom: "1px solid #424242",
-                    padding: "6px 20px",
-                    cursor: "pointer",
-                    backgroundColor: "rgba(255, 255, 255, 0.04)",
-                    borderRadius: "8px",
-                    alignItems: "center",
+                    fontSize: "16px",
+                    color: "skyblue",
                   }}
-                  // onClick={() => updateItem(el)}
-                >
+                />{" "}
+                to add Expenses
+              </h4>
+            }
+          >
+            {/* <Button type="primary">Create Now</Button> */}
+          </Empty>
+        ) : (
+          <>
+            <h2
+              className="poppins-regular"
+              style={{
+                textAlign: "center",
+                paddingBottom: "20px",
+              }}
+            >
+              {date.toDateString()}
+            </h2>
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+              }}
+            >
+              {filterDayWise?.map((item) => {
+                return (
                   <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <h4
-                      className="poppins-light"
-                      style={{
-                        color: "lightseagreen",
-                      }}
-                    >
-                      {item?.title}
-                    </h4>
-                    <div
-                      className="poppins-thin-light"
-                      style={{
-                        color: "lightslategray",
-                      }}
-                    >
-                      #{item?.category}
-                    </div>
-                  </div>
-                  <div
+                    key={item?._id}
                     style={{
                       display: "flex",
                       flexDirection: "row",
+                      justifyContent: "space-between",
+                      borderBottom: "1px solid #424242",
+                      padding: "6px 20px",
+                      cursor: "pointer",
+                      backgroundColor: "rgba(255, 255, 255, 0.04)",
+                      borderRadius: "8px",
+                      alignItems: "center",
                     }}
+                    onClick={() => updateItem(item)}
                   >
-                    <h4
-                      className="poppins-light"
+                    <div
                       style={{
-                        color: "#cb7b6d",
+                        display: "flex",
+                        flexDirection: "column",
                       }}
                     >
-                      $&nbsp;{item?.amount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    </h4>
-                    <RightOutlined />
+                      <h4
+                        className="poppins-light"
+                        style={{
+                          color: "lightseagreen",
+                        }}
+                      >
+                        {item?.title}
+                      </h4>
+                      <div
+                        className="poppins-thin-light"
+                        style={{
+                          color: "lightslategray",
+                        }}
+                      >
+                        #{item?.category}
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <h4
+                        className="poppins-light"
+                        style={{
+                          color: "#cb7b6d",
+                        }}
+                      >
+                        $&nbsp;{item?.amount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      </h4>
+                      <RightOutlined />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        </>
-      )}
-      {filterDayWise?.length > 0 && (
-        <>
-          <Divider type="horizontal" orientation="center" plain />
-          <div
-            style={{
-              border: "1px solid #424242",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              padding: 10,
-              borderRadius: "8px",
-              backgroundColor: "rgba(255, 255, 255, 0.04)",
-              color: "#cb7b6d",
-            }}
-          >
-            <h2
-              className="poppins-light"
+                );
+              })}
+            </div>
+          </>
+        )}
+        {filterDayWise?.length > 0 && (
+          <>
+            <Divider type="horizontal" orientation="center" plain />
+            <div
               style={{
-                color: "lightseagreen",
+                border: "1px solid #424242",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                padding: 10,
+                borderRadius: "8px",
+                backgroundColor: "rgba(255, 255, 255, 0.04)",
+                color: "#cb7b6d",
               }}
             >
-              Total Expenses
-            </h2>
-            <h2 className="poppins-light">$&nbsp;{totalAmount}</h2>
-          </div>
-        </>
-      )}
+              <h2
+                className="poppins-light"
+                style={{
+                  color: "lightseagreen",
+                }}
+              >
+                Total Expenses
+              </h2>
+              <h2 className="poppins-light">$&nbsp;{totalAmount}</h2>
+            </div>
+          </>
+        )}
+
+        {/* Modal for updating items */}
+        <UpdateModal
+          itemData={itemData}
+          um_open={um_open}
+          closeUpdateModal={closeUpdateModal}
+        />
+      </div>
+      </div>
     </ContentWrapper>
   );
 };

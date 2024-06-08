@@ -4,6 +4,7 @@ import { Button, Divider } from "antd";
 import { useNavigate } from "react-router-dom";
 import { clearAuth, selectLoggedIn } from "../store/features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -12,6 +13,8 @@ const Landing = () => {
   const logout = () => {
     dispatch(clearAuth());
   };
+  const el = useBreakpoint();
+  console.log(el);
   return (
     <ContentWrapper bread={false}>
       <div
@@ -55,18 +58,26 @@ const Landing = () => {
               padding: "10px",
               display: "flex",
               justifyContent: "center",
+              flexDirection: "column",
               gap: "20px",
             }}
           >
             <h2 className="poppins-thin">
               Please login/ Register to explore the app
             </h2>
-            <Button type="default" onClick={() => navigate("/login")}>
-              Login
-            </Button>
-            <Button type="primary" onClick={() => navigate("/register")}>
-              Register
-            </Button>
+            <div style={{
+              display:'flex',
+              flexDirection:el.xs ? 'column' :'row',
+              gap:'10px',
+              justifyContent:'center'
+            }}>
+              <Button type="default" onClick={() => navigate("/login")}>
+                Login
+              </Button>
+              <Button type="primary" onClick={() => navigate("/register")}>
+                Register
+              </Button>
+            </div>
           </div>
         )}
       </div>

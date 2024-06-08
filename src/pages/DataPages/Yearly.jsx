@@ -8,10 +8,29 @@ import {
   selectUserItemsData,
   setRefetchStatus,
 } from "../../store/features/global/globalSlice";
-import { PlusCircleOutlined, RightOutlined } from "@ant-design/icons";
+import {
+  LeftCircleOutlined,
+  PlusCircleOutlined,
+  RightCircleOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
 import { Empty, Collapse, Divider, Skeleton } from "antd";
+import UpdateModal from "../../components/UpdateModal";
 
 const Yearly = () => {
+  //handling year start
+  const [changeYear, setChangeYear] = useState(new Date().getFullYear());
+  const incYearFunc = () => {
+    setChangeYear((year) => year + 1);
+  };
+  const decYearFunc = () => {
+    setChangeYear((year) => year - 1);
+  };
+  // const getYear = () => {
+  //   const date = new Date();
+  //   return `${date.getFullYear()}`;
+  // };
+  //handling year end
   const { Panel } = Collapse;
   const userData = useSelector(selectUserItemsData);
   const userDataLoading = useSelector(selectItemsLoading);
@@ -33,9 +52,9 @@ const Yearly = () => {
 
   const filterYearWise = useMemo(() => {
     return userData?.filter(
-      (item) => new Date(item.date).getFullYear() === date.getFullYear()
+      (item) => new Date(item.date).getFullYear() === changeYear
     );
-  }, [userData]);
+  }, [userData, changeYear]);
 
   //sorting by month
   const filteredMonthlySort = useMemo(() => {
@@ -132,7 +151,7 @@ const Yearly = () => {
             padding: "10px 20px",
             cursor: "pointer",
           }}
-          // onClick={() => updateItem(el)}
+          onClick={() => updateItem(el)}
         >
           <div
             style={{
@@ -187,99 +206,153 @@ const Yearly = () => {
     (acc, cur) => acc + cur?.amount,
     0
   );
+  // update data modal state
+  const [itemData, setItemData] = useState({});
+  const [um_open, setUM_open] = useState(false);
+  const closeUpdateModal = (state) => {
+    setUM_open(state);
+  };
+  const updateItem = async (item) => {
+    setUM_open(true);
+    setItemData(item);
+  };
   return (
     <ContentWrapper bread={false}>
-      {userDataLoading ? (
-         [1, 2, 3, 4, 5].map((el) => {
-          return <Skeleton key={el} />;
-        })
-      ) : filterYearWise?.length === 0 ? (
-        <Empty
+      <div
+        style={{
+          // border:'1px solid red',
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div
           style={{
-            paddingTop: "150px",
+            // border: "1px solid white",
+            width: "800px",
+            display: "flex",
+            flexDirection: "column",
+            alignContent: "center",
+            justifyContent: "center",
           }}
-          image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-          imageStyle={{ height: 60 }}
-          description={
-            <h4 className={"poppins-medium"}>
-              No data Click on{" "}
-              <PlusCircleOutlined
-                style={{
-                  fontSize: "16px",
-                  color: "skyblue",
-                }}
-              />{" "}
-              to add Expenses
-            </h4>
-          }
-        ></Empty>
-      ) : (
-        <>
-          <h2
-            className="poppins-regular"
-            style={{
-              textAlign: "center",
-              paddingBottom: "20px",
-            }}
-          >
-            {date.getFullYear()}
-          </h2>
-          <Collapse accordion>
-            {filteredUniqueMonths?.map((item) => {
-              return (
-                <Panel
-                  header={
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <h3 className="poppins-regular">{months[item?.month]}</h3>
-                      <h3 className="poppins-regular">
-                        $&nbsp;{getMonthTotal(item?.month)}
-                      </h3>
-                    </div>
-                  }
-                  key={item._id}
-                >
-                  <Collapse accordion>
-                    {displayMonthCategories(item?.month)}
-                  </Collapse>
-                </Panel>
-              );
-            })}
-          </Collapse>
-        </>
-      )}
-      {filterYearWise?.length > 0 && (
-        <>
-          <Divider type="horizontal" orientation="center" plain />
+        >
           <div
             style={{
-              border: "1px solid #424242",
               display: "flex",
-              flexDirection: "row",
               justifyContent: "space-between",
-              padding: 10,
-              borderRadius: "8px",
-              backgroundColor: "rgba(255, 255, 255, 0.04)",
-              color: "#cb7b6d",
+              alignItems: "center",
+              alignContent: "center",
+              padding: "10px",
             }}
           >
-            <h2
-              className="poppins-light"
+            <LeftCircleOutlined
               style={{
-                color: "lightseagreen",
+                fontSize: "20px",
+                cursor: changeYear === 0 ? "auto" : "pointer",
+                color: changeYear === 0 ? "grey" : "white",
               }}
-            >
-              Total Expenses
-            </h2>
-            <h2 className="poppins-light">$&nbsp;{yearlyTotal}</h2>
+              onClick={decYearFunc}
+            />
+            <h2 className="poppins-regular">{changeYear}</h2>
+            <RightCircleOutlined
+              style={{
+                fontSize: "20px",
+                cursor: changeYear === 11 ? "auto" : "pointer",
+                color: changeYear === 11 ? "grey" : "white",
+              }}
+              onClick={incYearFunc}
+            />
           </div>
-        </>
-      )}
+          {userDataLoading ? (
+            [1, 2, 3, 4, 5].map((el) => {
+              return <Skeleton key={el} />;
+            })
+          ) : filterYearWise?.length === 0 ? (
+            <Empty
+              style={{
+                paddingTop: "150px",
+              }}
+              image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+              imageStyle={{ height: 60 }}
+              description={
+                <h4 className={"poppins-medium"}>
+                  No data Click on{" "}
+                  <PlusCircleOutlined
+                    style={{
+                      fontSize: "16px",
+                      color: "skyblue",
+                    }}
+                  />{" "}
+                  to add Expenses
+                </h4>
+              }
+            ></Empty>
+          ) : (
+            <>
+              <Collapse accordion>
+                {filteredUniqueMonths?.map((item) => {
+                  return (
+                    <Panel
+                      header={
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <h3 className="poppins-regular">
+                            {months[item?.month]}
+                          </h3>
+                          <h3 className="poppins-regular">
+                            $&nbsp;{getMonthTotal(item?.month)}
+                          </h3>
+                        </div>
+                      }
+                      key={item._id}
+                    >
+                      <Collapse accordion>
+                        {displayMonthCategories(item?.month)}
+                      </Collapse>
+                    </Panel>
+                  );
+                })}
+              </Collapse>
+            </>
+          )}
+          {filterYearWise?.length > 0 && (
+            <>
+              <Divider type="horizontal" orientation="center" plain />
+              <div
+                style={{
+                  border: "1px solid #424242",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  padding: 10,
+                  borderRadius: "8px",
+                  backgroundColor: "rgba(255, 255, 255, 0.04)",
+                  color: "#cb7b6d",
+                }}
+              >
+                <h2
+                  className="poppins-light"
+                  style={{
+                    color: "lightseagreen",
+                  }}
+                >
+                  Total Expenses
+                </h2>
+                <h2 className="poppins-light">$&nbsp;{yearlyTotal}</h2>
+              </div>
+            </>
+          )}
+          <UpdateModal
+            itemData={itemData}
+            um_open={um_open}
+            closeUpdateModal={closeUpdateModal}
+          />
+        </div>
+      </div>
     </ContentWrapper>
   );
 };

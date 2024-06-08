@@ -8,8 +8,10 @@ const ContentWrapper = (props) => {
   return (
     <Layout.Content
       style={{
-        padding: "0 40px",
+        padding: "0 10px",
+      
       }}
+      
     >
       {props.bread === true && (
         <Breadcrumb

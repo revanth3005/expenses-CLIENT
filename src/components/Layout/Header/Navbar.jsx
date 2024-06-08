@@ -53,6 +53,7 @@ const ResponsiveDrawer = () => {
   };
   const logoutFunc = () => {
     dispatch(clearAuth());
+    handleMenuItemClick()
     navigate("/");
   };
   useEffect(() => {

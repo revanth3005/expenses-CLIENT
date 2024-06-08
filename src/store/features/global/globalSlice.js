@@ -108,6 +108,9 @@ export const selectItemsFetched = (state) => state.globalData.itemsFetched;
 export const selectItemsError = (state) => state.globalData.itemsError;
 export const selectRefetchItems = (state) => state.globalData.refetchItems;
 
+//api
+
+
 export const { handleModalCancel, handleModalOk, showModal, setRefetchStatus } =
   globalSlice.actions;
 
